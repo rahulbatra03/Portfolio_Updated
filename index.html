@@ -27,7 +27,11 @@
       --gradient:  linear-gradient(135deg, #638cff 0%, #a78bfa 100%);
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { font-size: 16px; scroll-behavior: smooth; }
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+      scrollbar-gutter: stable;
+    }
     body {
       background: var(--bg);
       color: var(--text);
@@ -38,6 +42,8 @@
       justify-content: center;
       padding: 40px 20px;
       -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      -webkit-overflow-scrolling: touch;
       background-image: 
         radial-gradient(ellipse 80% 50% at 20% 0%, rgba(99,140,255,0.07) 0%, transparent 60%),
         radial-gradient(ellipse 60% 40% at 80% 100%, rgba(167,139,250,0.06) 0%, transparent 60%);
@@ -194,82 +200,47 @@
     .tab-btn:hover { color: var(--white); }
     .tab-btn.active { background: var(--accent-d); color: var(--accent); border-color: rgba(99,140,255,0.2); }
 
-    /* ═══ MOBILE NAV BAR ═══ */
-    .mobile-nav-bar {
+    /* ═══ MOBILE BOTTOM NAV ═══ */
+    .mobile-bottom-nav {
       display: none;
       align-items: center;
-      justify-content: space-between;
-      padding: 14px 18px;
-      background: var(--bg3);
-      border-bottom: 1px solid var(--border);
-    }
-    .mobile-nav-title {
-      font-family: 'Sora', sans-serif;
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: var(--white);
-      background: var(--gradient);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    /* Hamburger button */
-    .hamburger {
-      width: 40px; height: 40px;
-      background: var(--bg3);
+      justify-content: space-around;
+      position: fixed;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      z-index: 20;
+      padding: 8px;
+      border-radius: 16px;
+      background: rgba(15,20,32,0.94);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: 5px; cursor: pointer;
-      transition: border-color 0.2s, background 0.2s;
-      padding: 0;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 14px 40px rgba(0,0,0,0.35);
     }
-    .hamburger:hover { border-color: rgba(99,140,255,0.4); background: var(--accent-d); }
-    .hamburger span {
-      display: block;
-      width: 18px; height: 2px;
-      background: var(--text);
-      border-radius: 2px;
-      transition: transform 0.3s ease, opacity 0.3s ease, background 0.2s;
-    }
-    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); background: var(--accent); }
-    .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
-    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); background: var(--accent); }
-
-    /* Mobile dropdown menu */
-    .mobile-menu {
-      display: none;
-      flex-direction: column;
-      background: var(--bg3);
-      border-bottom: 1px solid var(--border);
-      overflow: hidden;
-      max-height: 0;
-      transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1);
-    }
-    .mobile-menu.open {
-      max-height: 300px;
-    }
-    .mobile-menu-item {
-      padding: 14px 22px;
-      font-size: 0.9rem; font-weight: 600;
+    .mobile-bottom-btn {
+      flex: 1;
+      border: 1px solid transparent;
+      background: transparent;
+      border-radius: 12px;
+      padding: 10px 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
       color: var(--muted);
       cursor: pointer;
-      border-bottom: 1px solid var(--border);
-      transition: color 0.2s, background 0.2s, padding-left 0.2s;
-      display: flex; align-items: center; gap: 10px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      transition: transform 0.2s, color 0.2s, background 0.25s, border-color 0.25s;
     }
-    .mobile-menu-item:last-child { border-bottom: none; }
-    .mobile-menu-item:hover { color: var(--white); background: rgba(99,140,255,0.05); padding-left: 28px; }
-    .mobile-menu-item.active { color: var(--accent); background: var(--accent-d); }
-    .mobile-menu-item .menu-dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: var(--muted); flex-shrink: 0;
-      transition: background 0.2s;
+    .mobile-bottom-btn:hover {
+      color: var(--white);
+      transform: translateY(-1px);
     }
-    .mobile-menu-item.active .menu-dot { background: var(--accent); }
+    .mobile-bottom-btn.active {
+      color: var(--accent);
+      background: var(--accent-d);
+      border-color: rgba(99,140,255,0.22);
+    }
 
-    .tab-panel { display: none; padding: 40px 44px; animation: fadeUp 0.35s ease; }
+    .tab-panel { display: none; padding: 40px 44px; animation: fadeUp 0.45s cubic-bezier(0.2,0.8,0.2,1); will-change: transform, opacity; }
     .tab-panel.active { display: block; }
     @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:none} }
 
@@ -552,12 +523,12 @@
 }
 
     /* ─── CONTACT ─── */
-    .contact-grid { display: grid; grid-template-columns: 1fr; }
+    .contact-grid { display: grid; grid-template-columns: 1fr; width: 100%; }
     .contact-info-cards { display: none; }
 
     .c-form {
       width: 100%; max-width: 720px;
-      margin-top: 24px;
+      margin-top: 12px;
       background: var(--bg3); border: 1px solid var(--border);
       border-radius: 18px; padding: 34px 38px;
       display: flex; flex-direction: column; gap: 18px;
@@ -598,19 +569,33 @@
     .send-btn-full:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(99,140,255,0.45); }
     .send-btn-full svg { width: 14px; height: 14px; }
 
+    .tab-btn,
+    .filter-btn,
+    .stat-card,
+    .doing-card,
+    .proj-card,
+    .social-btn,
+    .coding-pill {
+      transition-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
     /* ═══ RESPONSIVE ═══ */
     @media (max-width: 900px) {
-      body { padding: 20px 14px; }
+      body { padding: 20px 14px calc(94px + env(safe-area-inset-bottom)); align-items: flex-start; }
       .layout { flex-direction: column; gap: 16px; }
       .sidebar { width: 100%; position: static; min-height: unset; }
+      .main { width: 100%; min-height: unset; overflow: visible; }
       .doing-grid { grid-template-columns: 1fr; }
       .portfolio-grid { grid-template-columns: repeat(2, 1fr); }
       .about-stats { grid-template-columns: repeat(3, 1fr); }
 
       /* Hide desktop nav, show mobile nav */
       .tab-nav { display: none; }
-      .mobile-nav-bar { display: flex; }
-      .mobile-menu { display: flex; }
+      .mobile-bottom-nav { display: flex; }
+
+      #tab-contact.tab-panel.active { min-height: calc(100dvh - 220px); }
+      #tab-contact .contact-grid { align-content: start; }
+      #tab-contact .c-form { max-width: 100%; margin-top: 0; }
     }
 
     @media (max-width: 700px) {
@@ -625,7 +610,7 @@
     }
 
     @media (max-width: 580px) {
-      body { padding: 14px 10px; }
+      body { padding: 14px 10px calc(96px + env(safe-area-inset-bottom)); }
       .tab-panel { padding: 20px 16px; }
       .portfolio-grid { grid-template-columns: 1fr 1fr; }
       .c-form-row { grid-template-columns: 1fr; }
@@ -663,6 +648,15 @@
         display: flex;
         flex-direction: column;
         gap: 14px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
       }
     }
   </style>
@@ -749,37 +743,19 @@
 
     <!-- Desktop Tab Nav -->
     <nav class="tab-nav">
-      <button class="tab-btn active" onclick="switchTab('about', this)">About</button>
-      <button class="tab-btn" onclick="switchTab('resume', this)">Resume</button>
-      <button class="tab-btn" onclick="switchTab('portfolio', this)">Portfolio</button>
-      <button class="tab-btn" onclick="switchTab('contact', this)">Contact</button>
+      <button class="tab-btn active" onclick="switchTab('about')">About</button>
+      <button class="tab-btn" onclick="switchTab('resume')">Resume</button>
+      <button class="tab-btn" onclick="switchTab('portfolio')">Portfolio</button>
+      <button class="tab-btn" onclick="switchTab('contact')">Contact</button>
     </nav>
 
-    <!-- Mobile Nav Bar with Hamburger -->
-    <div class="mobile-nav-bar">
-      <span class="mobile-nav-title" id="mobile-active-title">About</span>
-      <button class="hamburger" id="hamburgerBtn" onclick="toggleMobileMenu(this)" aria-label="Toggle menu">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-    </div>
-
-    <!-- Mobile Dropdown Menu -->
-    <div class="mobile-menu" id="mobileMenu">
-      <div class="mobile-menu-item active" onclick="mobileSwitch('about', 'About', this)">
-        <span class="menu-dot"></span> About
-      </div>
-      <div class="mobile-menu-item" onclick="mobileSwitch('resume', 'Resume', this)">
-        <span class="menu-dot"></span> Resume
-      </div>
-      <div class="mobile-menu-item" onclick="mobileSwitch('portfolio', 'Portfolio', this)">
-        <span class="menu-dot"></span> Portfolio
-      </div>
-      <div class="mobile-menu-item" onclick="mobileSwitch('contact', 'Contact', this)">
-        <span class="menu-dot"></span> Contact
-      </div>
-    </div>
+    <!-- Mobile Fixed Bottom Nav -->
+    <nav class="mobile-bottom-nav">
+      <button class="mobile-bottom-btn active" onclick="mobileSwitch('about')">About</button>
+      <button class="mobile-bottom-btn" onclick="mobileSwitch('resume')">Resume</button>
+      <button class="mobile-bottom-btn" onclick="mobileSwitch('portfolio')">Portfolio</button>
+      <button class="mobile-bottom-btn" onclick="mobileSwitch('contact')">Contact</button>
+    </nav>
 
     <!-- ── ABOUT ── -->
     <div class="tab-panel active" id="tab-about">
@@ -1191,48 +1167,32 @@
 </div>
 
 <script>
-  /* ── Desktop tab switching ── */
-  function switchTab(name, btn) {
+  function setActiveTab(name) {
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('tab-' + name).classList.add('active');
-    btn.classList.add('active');
+
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.mobile-bottom-btn').forEach(b => b.classList.remove('active'));
+
+    const tabNames = ['about','resume','portfolio','contact'];
+    const idx = tabNames.indexOf(name);
+    const desktopBtns = document.querySelectorAll('.tab-btn');
+    const mobileBtns = document.querySelectorAll('.mobile-bottom-btn');
+    if (desktopBtns[idx]) desktopBtns[idx].classList.add('active');
+    if (mobileBtns[idx]) mobileBtns[idx].classList.add('active');
   }
 
-  /* ── Mobile hamburger toggle ── */
-  function toggleMobileMenu(btn) {
-    btn.classList.toggle('open');
-    const menu = document.getElementById('mobileMenu');
-    menu.classList.toggle('open');
+  /* ── Desktop tab switching ── */
+  function switchTab(name) {
+    setActiveTab(name);
   }
 
   /* ── Mobile tab switching ── */
-  function mobileSwitch(name, label, item) {
-    // Switch panel
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    document.getElementById('tab-' + name).classList.add('active');
-
-    // Sync desktop tabs too
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    const desktopBtns = document.querySelectorAll('.tab-btn');
-    const tabNames = ['about','resume','portfolio','contact'];
-    const idx = tabNames.indexOf(name);
-    if (desktopBtns[idx]) desktopBtns[idx].classList.add('active');
-
-    // Update mobile title
-    document.getElementById('mobile-active-title').textContent = label;
-
-    // Update active state in mobile menu
-    document.querySelectorAll('.mobile-menu-item').forEach(m => m.classList.remove('active'));
-    item.classList.add('active');
-
-    // Close menu
-    const hamburger = document.getElementById('hamburgerBtn');
-    hamburger.classList.remove('open');
-    document.getElementById('mobileMenu').classList.remove('open');
-
-    // Scroll main content into view smoothly
-    document.querySelector('.main').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  function mobileSwitch(name) {
+    setActiveTab(name);
+    if (window.matchMedia('(max-width: 900px)').matches) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }
 
   /* ── Portfolio filter ── */
